@@ -1,0 +1,49 @@
+import java.util.*;
+class BubbleSort{
+	public void bubbleSort(int []arr){
+		int n=arr.length;
+		for(int i=0;i<n-1;i++){
+			for(int j=0;j<n-1-i;j++){
+				if(arr[j]>arr[j+1]){
+					int t=arr[j];
+					arr[j]=arr[j+1];
+					arr[j+1]=t;
+				}
+			}
+		}
+	}
+	public void printArray(int []arr){
+		for(int num:arr){
+			System.out.print(num+" ");
+		}
+		System.out.println();
+	}	
+}	
+public class bubbletime{
+	public static void main(String []args){
+		Scanner sc=new Scanner(System.in);
+		BubbleSort b=new BubbleSort();
+		System.out.print("Enter no.of elements: ");
+		int n=sc.nextInt();
+		System.out.println("Enter elements in an array: ");
+		int []a=new int[n];
+		for(int i=0;i<n;i++){
+			a[i]=sc.nextInt();
+		}
+		System.out.print("Before sorting: ");
+		b.printArray(a);
+		long startTime=System.nanoTime();
+		b.bubbleSort(a);
+		long endTime=System.nanoTime();
+		System.out.print("After Sorting: ");
+		b.printArray(a);
+		System.out.println("Exhecution time= "+(endTime-startTime)+" nanoSeconds");
+	}
+}
+//output
+Enter no.of elements: 5
+Enter elements in array: 
+2 0 6 5 1
+Before sorting: 2 0 6 5 1 
+After sorting: 0 1 2 5 6 
+Exhecution time= 1892 nanoSeconds
