@@ -1,0 +1,42 @@
+import java.util.*;
+class MinHeap{
+	//Implementation
+	private ArrayList<Integer> heap;
+	public MinHeap(){
+		heap=new ArrayList<>();
+	}
+	//Insertion
+	public void InsertMinHeap(int value){
+		//adding new element
+		heap.add(value);
+		int index=heap.size()-1;
+		//Heapify
+		while(index>0&&heap.get((index-1)/2)>heap.get(index)){
+			swap(heap,index,(index-1)/2);
+			index=(index-1/2);
+		}
+	}
+	public void swap(ArrayList<Integer> heap,int x,int y){
+		int temp=heap.get(x);
+		heap.set(x,heap.get(y));
+		heap.set(y,temp);
+	}
+	public void printHeap(){
+		for(int i:heap){
+			System.out.print(i+" ");
+		}
+		System.out.println();
+	}
+	public static void main(String[]args){
+		MinHeap mh=new MinHeap();
+		int []values={10,7,11,5,4,13};
+		System.out.println("Before Insertion: ");
+		mh.printHeap();
+		for(int j:values){
+			mh.InsertMinHeap(j);
+			System.out.println("Inserted value "+j+" into the minHeap");
+		}
+		System.out.println("After Insertion: ");
+		mh.printHeap();
+	}
+}
