@@ -1,0 +1,227 @@
+import java.util.Stack;
+
+public class BTree {
+    private int T; // Minimum degree (defines the range for number of keys)
+    private Node root; // Root node of the B-Tree
+
+    // Node class representing a B-Tree node
+    public class Node {
+        int n; // Number of keys
+        int key[]; // Array of keys
+        Node child[]; // Array of child pointers
+        boolean leaf; // True if node is a leaf
+
+        public Node() {
+            key = new int[2 * T - 1]; // Max number of keys
+            child = new Node[2 * T]; // Max number of children
+            leaf = true; // Default leaf
+            n = 0; // Initially, no keys
+        }
+
+        // Function to find the position of a key in the node
+        public int Find(int k) {
+            for (int i = 0; i < this.n; i++) {
+                if (this.key[i] == k) {
+                    return i; // Key found
+                }
+            }
+            return -1; // Key not found
+        }
+    }
+
+    // Constructor: Initializes an empty B-Tree with given minimum degree T
+    public BTree(int t) {
+        T = t;
+        root = new Node();
+    }
+
+    // Recursive search function to find a key
+    private Node Search(Node x, int key) {
+        if (x == null) return null;
+        int i = 0;
+        
+        // Find the first key greater than or equal to the given key
+        while (i < x.n && key > x.key[i]) {
+            i++;
+        }
+        
+        if (i < x.n && key == x.key[i]) {
+            return x; // Key found
+        }
+        
+        // If node is a leaf, key is not found
+        if (x.leaf) {
+            return null;
+        } else {
+            return Search(x.child[i], key); // Recur on the appropriate child
+        }
+    }
+
+    // Split child y of node x at index pos
+    private void Split(Node x, int pos, Node y) {
+        Node z = new Node();
+        z.leaf = y.leaf;
+        z.n = T - 1;
+
+        // Copy the last (T-1) keys from y to z
+        for (int j = 0; j < T - 1; j++) {
+            z.key[j] = y.key[j + T];
+        }
+
+        // Copy children of y to z if y is not a leaf
+        if (!y.leaf) {
+            for (int j = 0; j < T; j++) {
+                z.child[j] = y.child[j + T];
+            }
+        }
+
+        y.n = T - 1; // Reduce the number of keys in y
+
+        // Shift children of x to make space for new child
+        for (int j = x.n; j >= pos + 1; j--) {
+            x.child[j + 1] = x.child[j];
+        }
+        x.child[pos + 1] = z;
+
+        // Shift keys of x and insert the middle key
+        for (int j = x.n - 1; j >= pos; j--) {
+            x.key[j + 1] = x.key[j];
+        }
+        x.key[pos] = y.key[T - 1];
+        x.n++;
+    }
+
+    // Insert a key into the B-Tree
+    public void Insert(final int key) {
+        Node r = root;
+        if (r.n == 2 * T - 1) { // Root is full, need to split
+            Node s = new Node();
+            root = s;
+            s.leaf = false;
+            s.n = 0;
+            s.child[0] = r;
+            Split(s, 0, r);
+            _Insert(s, key);
+        } else {
+            _Insert(r, key);
+        }
+    }
+
+    // Insert key k into a subtree rooted at x
+    private void _Insert(Node x, int k) {
+        if (x.leaf) {
+            int i = x.n - 1;
+            while (i >= 0 && k < x.key[i]) {
+                x.key[i + 1] = x.key[i];
+                i--;
+            }
+            x.key[i + 1] = k;
+            x.n++;
+        } else {
+            int i = x.n - 1;
+            while (i >= 0 && k < x.key[i]) {
+                i--;
+            }
+            i++;
+            Node tmp = x.child[i];
+            if (tmp.n == 2 * T - 1) { // Child is full, split it
+                Split(x, i, tmp);
+                if (k > x.key[i]) {
+                    i++;
+                }
+            }
+            _Insert(x.child[i], k);
+        }
+    }
+
+    // Display the B-Tree
+    public void Show() {
+        Show(root);
+        System.out.println();
+    }
+
+    private void Show(Node x) {
+        if (x == null) return;
+        for (int i = 0; i < x.n; i++) {
+            System.out.print(x.key[i] + " ");
+        }
+        System.out.println();
+        if (!x.leaf) {
+            for (int i = 0; i <= x.n; i++) {
+                Show(x.child[i]);
+            }
+        }
+    }
+
+    // Remove a key from the B-Tree
+    public void Remove(int key) {
+        if (root == null) return; // Tree is empty
+        Remove(root, key);
+        if (root.n == 0) { // Shrink the height of the tree if root becomes empty
+            if (root.leaf) {
+                root = null;
+            } else {
+                root = root.child[0];
+            }
+        }
+    }
+
+    private void Remove(Node x, int key) {
+        int pos = 0;
+        while (pos < x.n && key > x.key[pos]) {
+            pos++;
+        }
+
+        if (pos < x.n && key == x.key[pos]) { // Key found
+            if (x.leaf) { // Case 1: Key is in a leaf node
+                for (int i = pos; i < x.n - 1; i++) {
+                    x.key[i] = x.key[i + 1];
+                }
+                x.n--;
+            } else { // Case 2: Key is in an internal node
+                Node pred = x.child[pos];
+                int predKey = pred.key[pred.n - 1];
+                Remove(pred, predKey);
+                x.key[pos] = predKey;
+            }
+        } else { // Key not found in this node
+            if (x.leaf) return;
+            Remove(x.child[pos], key);
+        }
+    }
+
+    // Check if the tree contains a key
+    public boolean Contain(int k) {
+        return Search(root, k) != null;
+    }
+
+    // Main method for testing
+    public static void main(String[] args) {
+        BTree b = new BTree(3);
+        b.Insert(8);
+        b.Insert(9);
+        b.Insert(10);
+        b.Insert(11);
+        b.Insert(15);
+        b.Insert(20);
+        b.Insert(17);
+        b.Insert(25);
+        b.Insert(30);
+        b.Show();
+        b.Remove(10);
+        System.out.println("After deletion:");
+        b.Show();
+    }
+}
+
+//output
+10 17 
+8 9
+11 15
+20 25 30
+
+After deletion:
+9 17
+8
+11 15
+20 25 30
