@@ -10,7 +10,7 @@ public class Maxheap{
 	}
 	//get parent index
 	int parent(int i){
-		return (i-2)/2;
+		return (i-1)/2;
 	}
 	//get left child of given parent index i
 	int lchild(int i){
@@ -28,7 +28,7 @@ public class Maxheap{
 		if(l<heapSize && arr[l]>arr[i]){
 			largest=l;
 		}
-		if(r<heapSize && arr[r]>arr[i]){
+		if(r<heapSize && arr[r]>arr[largest]){
 			largest=r;
 		}
 		if(largest!=i){
@@ -84,16 +84,28 @@ public class Maxheap{
 	}
 	public static void main(String[]args){
 		Maxheap h=new Maxheap(12);
-		int ele={25,35,12,18,77,37,43,52};
+		int ele[]={25,35,12,18,77,37,43,52};
 		for(int i:ele){
 			h.insertKey(i);
 		}
 		h.printHeap();
 		System.out.println("Current size of heap is: "+h.curSize());
 		System.out.println("Maximum element: "+h.getMax());
+		System.out.println("After removing element "+h.getMax());
 		h.removeMax();
 		h.printHeap();
 		System.out.println("Current size of heap is: "+h.curSize());
 		System.out.println("Maximum element: "+h.getMax());
 	}
 }
+
+//output
+Heap elements: 
+77 52 43 35 25 12 37 18 
+Current size of heap is: 8
+Maximum element: 77
+After removing element 77
+Heap elements:
+52 35 43 18 25 12 37
+Current size of heap is: 7
+Maximum element: 52
