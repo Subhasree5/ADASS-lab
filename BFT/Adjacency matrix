@@ -1,0 +1,45 @@
+import java.util.*;
+public class BFTAdjMatrix{
+    //implement BFT method
+    static void BFT(int [][]graph,char []vertices,char startNode){
+        int numVertices=graph.length;//stores no.of elements
+        boolean visited[]=new boolean[numVertices];//keeps track of visited node
+        Queue <Integer> queue=new LinkedList<>();//queue for BFT
+        int startIndex=-1;
+        for(int i=0;i<numVertices;i++){
+            if(vertices[i]==startNode){
+                startIndex=i;
+                break;
+            }
+        }
+        if(startIndex==-1){
+            System.out.println("start vertex not found");
+            return;
+        }
+        visited[startIndex]=true;
+        queue.add(startIndex);
+        System.out.println("Breadth first traversal starting from node "+startNode+" :");
+        while(!queue.isEmpty()){
+            int nodeIndex=queue.poll();
+            System.out.print(vertices[nodeIndex]+" ");
+            //Explore neightbours of thee node
+            for(int i=0;i<numVertices;i++){
+                if(graph[nodeIndex][i]==1 && !visited[i]){
+                    visited[i]=true;
+                    queue.add(i);
+                }
+            }
+        }
+        System.out.println();
+    }    
+    public static void main(String[]args){
+        char[] vertices={'a','b','c','d','e','f'};
+        int [][]graph={{0,1,1,0,0,0},{1,0,1,1,0,0},{1,1,0,0,1,0},{0,1,0,0,1,1},{0,0,1,1,0,1},{0,0,0,1,1,0}};
+        char startNode='a';
+        BFT(graph,vertices,startNode);
+    }
+}
+
+//output
+Breadth first traversal starting from node a :
+a b c d e f
