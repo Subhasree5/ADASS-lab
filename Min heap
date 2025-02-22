@@ -90,21 +90,21 @@ public class Minheap{
 		}
 		h.printHeap();
 		System.out.println("Current size of heap is: "+h.curSize());
-		System.out.println("Maximum element: "+h.getMin());
-        System.out.println("After removing element "+h.getMin());
+		System.out.println("Minimum element: "+h.getMin());
+        	System.out.println("After removing element "+h.getMin());
 		h.removeMin();
 		h.printHeap();
 		System.out.println("Current size of heap is: "+h.curSize());
-		System.out.println("Maximum element: "+h.getMin());
+		System.out.println("Minimum element: "+h.getMin());
 	}
 }
 //output
 Heap elements: 
 12 18 25 35 77 37 43 52 
 Current size of heap is: 8
-Maximum element: 12
+Minimum element: 12
 After removing element 12
 Heap elements:
 18 35 25 52 77 37 43
 Current size of heap is: 7
-Maximum element: 18
+Minimum element: 18
