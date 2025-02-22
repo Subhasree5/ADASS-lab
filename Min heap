@@ -51,7 +51,7 @@ public class Minheap{
 			MinHeapify(0);		
 		}
 	}
-	//Get maximum element
+	//Get minimum element
 	int getMin(){
 		return arr[0];
 	}
