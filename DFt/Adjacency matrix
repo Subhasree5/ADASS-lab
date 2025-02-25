@@ -1,0 +1,60 @@
+import java.util.*;
+
+public class DFTAdjMatrix {
+    // Depth-First Traversal (DFT) using Recursion
+    static void DFT(int[][] graph, char[] vertices, char startNode) {
+        int numVertices = graph.length; // Total number of vertices
+        boolean[] visited = new boolean[numVertices]; // Track visited nodes
+
+        // Find the index of the startNode
+        int startIndex = -1;
+        for (int i = 0; i < numVertices; i++) {
+            if (vertices[i] == startNode) {
+                startIndex = i;
+                break;
+            }
+        }
+
+        if (startIndex == -1) {
+            System.out.println("Start vertex not found");
+            return;
+        }
+
+        System.out.println("Depth-First Traversal starting from node " + startNode + ":");
+        DFS(graph, vertices, startIndex, visited);
+        System.out.println();
+    }
+
+    // Recursive DFS function
+    static void DFS(int[][] graph, char[] vertices, int nodeIndex, boolean[] visited) {
+        visited[nodeIndex] = true; // Mark the node as visited
+        System.out.print(vertices[nodeIndex] + " "); // Print the node
+
+        // Explore adjacent nodes
+        for (int i = 0; i < graph.length; i++) {
+            if (graph[nodeIndex][i] == 1 && !visited[i]) { // If connected & not visited
+                DFS(graph, vertices, i, visited);
+            }
+        }
+    }
+
+    // Main function
+    public static void main(String[] args) {
+        char[] vertices = {'a', 'b', 'c', 'd', 'e', 'f'}; // Vertex labels
+        int[][] graph = { // Adjacency matrix
+            {0, 1, 1, 0, 0, 0}, // a → b, c
+            {1, 0, 1, 1, 0, 0}, // b → a, c, d
+            {1, 1, 0, 0, 1, 0}, // c → a, b, e
+            {0, 1, 0, 0, 1, 1}, // d → b, e, f
+            {0, 0, 1, 1, 0, 1}, // e → c, d, f
+            {0, 0, 0, 1, 1, 0}  // f → d, e
+        };
+
+        char startNode = 'a'; // Start DFS from node 'a'
+        DFT(graph, vertices, startNode);
+    }
+}
+
+//output
+Depth-First Traversal starting from node a:
+a b c e d f
