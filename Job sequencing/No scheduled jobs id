@@ -1,0 +1,83 @@
+import java.util.*;
+public class JobSequencing{
+	//Define function
+	static ArrayList<Integer> jobSequencing(int[]id,int[]deadline,int[]profit){
+		int n=id.length;
+		//Initialise result
+		ArrayList<Integer> ans=new ArrayList<>(Arrays.asList(0,0));//ArrayList using as function array converted to list
+		//create job arraylist
+		ArrayList<int[]> jobs=new ArrayList<>();
+		for(int i=0;i<n;i++){
+			jobs.add(new int[]{profit[i],deadline[i]});
+		}
+		//sort jobs by profit
+		jobs.sort((a,b)->b[0]-a[0]);
+		//Create job schedule arry
+		int []result=new int[n];
+		Arrays.fill(result,-1);
+		//Schedule jobs
+		for(int i=0;i<n;i++){
+			int start=Math.min(n,jobs.get(i)[1])-1;
+			for(int j=start;j>=0;j--){
+				if(result[j]==-1){
+					result[j]=i;
+					break;
+				}
+			}
+		}
+		//compute ans
+		for(int i=0;i<n;i++){
+			if(result[i]!=-1){
+				ans.set(1,ans.get(1)+jobs.get(result[i])[0]);
+				ans.set(0,ans.get(0)+1);
+			}
+		}
+		return ans;
+	}
+	public static void main(String[]args){
+		int []id={1,2,3,4,5};
+		int []deadline={2,1,2,1,1};
+		int []profit={100,19,27,25,12};
+		ArrayList<Integer>ans=jobSequencing(id,deadline,profit);
+		System.out.println("("+ans.get(0)+" "+ans.get(1)+")");
+		System.out.println("No.of jobs scheduled= "+ans.get(0));
+		System.out.println("Total profit= "+ans.get(1));
+	}
+}
+//output
+(2 127)
+No.of jobs scheduled= 2
+Total profit= 127
+
+if diffetrent id,deadline,profit were given
+int []id={1,2};
+int []deadline={1,1};
+int []profit={100,10};
+//output
+(1 100)
+No.of jobs scheduled= 1
+Total profit= 100
+//
+int []id={1,2};
+int []deadline={1,2};
+int []profit={100,10};
+//output
+(2 110)
+No.of jobs scheduled= 2
+Total profit= 110
+//
+int []id={1,2,3,4,5};
+int []deadline={2,2,1,3,3};
+int []profit={20,15,10,5,1};
+//output
+(3 40)
+No.of jobs scheduled= 3
+Total profit= 40
+//
+int []id={1,2,3};
+int []deadline={2,1,2};
+int []profit={100,10,27};
+//output
+(2 127)
+No.of jobs scheduled= 2
+Total profit= 127
