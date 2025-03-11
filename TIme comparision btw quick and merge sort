@@ -1,0 +1,140 @@
+import java.util.Arrays;
+import java.util.Random;
+
+public class SortingComparision {
+    
+    // Quick Sort Implementation
+    public static void quickSort(int[] arr, int low, int high) {
+        if (low < high) {
+            int pi = partition(arr, low, high);
+            quickSort(arr, low, pi - 1);
+            quickSort(arr, pi + 1, high);
+        }
+    }
+    
+    private static int partition(int[] arr, int low, int high) {
+        int pivot = arr[high]; // Choosing last element as pivot
+        int i = low - 1;
+        for (int j = low; j < high; j++) {
+            if (arr[j] <= pivot) {
+                i++;
+                swap(arr, i, j);
+            }
+        }
+        swap(arr, i + 1, high);
+        return i + 1;
+    }
+
+    private static void swap(int[] arr, int i, int j) {
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+
+    // Merge Sort Implementation
+    public static void mergeSort(int[] arr, int left, int right) {
+        if (left < right) {
+            int mid = left + (right - left) / 2;
+            mergeSort(arr, left, mid);
+            mergeSort(arr, mid + 1, right);
+            merge(arr, left, mid, right);
+        }
+    }
+
+    private static void merge(int[] arr, int left, int mid, int right) {
+        int n1 = mid - left + 1;
+        int n2 = right - mid;
+
+        int[] L = new int[n1];
+        int[] R = new int[n2];
+
+        for (int i = 0; i < n1; i++) L[i] = arr[left + i];
+        for (int j = 0; j < n2; j++) R[j] = arr[mid + 1 + j];
+
+        int i = 0, j = 0, k = left;
+        while (i < n1 && j < n2) {
+            if (L[i] <= R[j]) arr[k++] = L[i++];
+            else arr[k++] = R[j++];
+        }
+
+        while (i < n1) arr[k++] = L[i++];
+        while (j < n2) arr[k++] = R[j++];
+    }
+
+    // Method to generate different cases of input arrays
+    public static int[] generateArray(int size, String type) {
+        int[] arr = new int[size];
+        Random rand = new Random();
+        
+        if (type.equals("average")) {
+            for (int i = 0; i < size; i++) arr[i] = rand.nextInt(10000);
+        } else if (type.equals("best")) {
+            for (int i = 0; i < size; i++) arr[i] = i; // Sorted array (Best case for Merge Sort)
+        } else if (type.equals("worst")) {
+            for (int i = 0; i < size; i++) arr[i] = size - i; // Reverse sorted (Worst case for Quick Sort)
+        }
+        
+        return arr;
+    }
+
+    public static void main(String[] args) {
+        int[] sizes = {1000, 5000, 10000}; // Array sizes to test
+        String[] cases = {"average", "best", "worst"};
+
+        for (String testCase : cases) {
+            System.out.println("\nSorting Performance for " + testCase.toUpperCase() + " case:");
+            for (int size : sizes) {
+                int[] arr1 = generateArray(size, testCase);
+                int[] arr2 = Arrays.copyOf(arr1, arr1.length);
+
+                // Measure Quick Sort time
+                long start = System.nanoTime();
+                quickSort(arr1, 0, arr1.length - 1);
+                long quickSortTime = System.nanoTime() - start;
+
+                // Measure Merge Sort time
+                start = System.nanoTime();
+                mergeSort(arr2, 0, arr2.length - 1);
+                long mergeSortTime = System.nanoTime() - start;
+
+                System.out.println("Array Size: " + size);
+                System.out.println("  Quick Sort Time: " + quickSortTime / 1e6 + " ms");
+                System.out.println("  Merge Sort Time: " + mergeSortTime / 1e6 + " ms");
+            }
+        }
+    }
+}
+
+//output
+Sorting Performance for AVERAGE case:
+Array Size: 1000
+  Quick Sort Time: 0.345791 ms
+  Merge Sort Time: 0.456079 ms
+Array Size: 5000
+  Quick Sort Time: 0.424334 ms
+  Merge Sort Time: 0.668778 ms
+Array Size: 10000
+  Quick Sort Time: 1.162283 ms
+  Merge Sort Time: 1.456444 ms
+
+Sorting Performance for BEST case:
+Array Size: 1000
+  Quick Sort Time: 0.294464 ms
+  Merge Sort Time: 0.069224 ms
+Array Size: 5000
+  Quick Sort Time: 7.585701 ms
+  Merge Sort Time: 0.321252 ms
+Array Size: 10000
+  Quick Sort Time: 37.049192 ms
+  Merge Sort Time: 0.488887 ms
+
+Sorting Performance for WORST case:
+Array Size: 1000
+  Quick Sort Time: 0.293983 ms
+  Merge Sort Time: 0.051081 ms
+Array Size: 5000
+  Quick Sort Time: 7.386288 ms
+  Merge Sort Time: 0.255086 ms
+Array Size: 10000
+  Quick Sort Time: 28.75717 ms
+  Merge Sort Time: 0.495361 ms
