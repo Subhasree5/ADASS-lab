@@ -1,0 +1,41 @@
+public class KnapsackBacktracking {
+    static int maxProfit = 0; // To track the maximum profit
+
+    // Backtracking function to solve 0/1 Knapsack
+    static void knapsack(int[] weights, int[] profits, int capacity, int index, int currentProfit, int currentWeight) {
+        // Base case: If we have considered all items
+        if (index == weights.length) {
+            maxProfit = Math.max(maxProfit, currentProfit);
+            return;
+        }
+
+        // If adding the current item doesn't exceed capacity, include it
+        if (currentWeight + weights[index] <= capacity) {
+            knapsack(weights, profits, capacity, index + 1, 
+                     currentProfit + profits[index], currentWeight + weights[index]);
+        }
+
+        // Exclude the current item and move to the next one
+        knapsack(weights, profits, capacity, index + 1, currentProfit, currentWeight);
+    }
+
+    // Function to find the maximum profit
+    static int findMaxProfit(int[] weights, int[] profits, int capacity) {
+        maxProfit = 0; // Reset maxProfit before each call
+        knapsack(weights, profits, capacity, 0, 0, 0);
+        return maxProfit;
+    }
+
+    public static void main(String[] args) {
+        int[] profits = {60, 100, 120}; 
+        int[] weights = {10, 20, 30};
+        int capacity = 50;
+
+        int maxProfit = findMaxProfit(weights, profits, capacity);
+        System.out.println("Maximum Profit: " + maxProfit);
+    }
+}
+
+//output
+
+Maximum Profit: 220
