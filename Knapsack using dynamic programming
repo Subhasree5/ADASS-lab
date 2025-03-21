@@ -1,0 +1,36 @@
+import java.util.*;
+
+public class Knapsack {
+   public static int findMax(int n1, int n2) {
+      return Math.max(n1, n2); // Using Math.max for simplicity
+   }
+
+   public static int knapsack(int m, int w[], int p[], int n) {
+      int K[][] = new int[n + 1][m + 1];
+
+      for (int i = 0; i <= n; i++) {
+         for (int weight = 0; weight <= m; weight++) { // Rename w to weight to avoid confusion
+            if (i == 0 || weight == 0) {
+               K[i][weight] = 0;
+            } else if (w[i - 1] <= weight) { // Fix the variable reference
+               K[i][weight] = findMax(p[i - 1] + K[i - 1][weight - w[i - 1]], K[i - 1][weight]);
+            } else {
+               K[i][weight] = K[i - 1][weight];
+            }
+         }
+      }
+      return K[n][m]; // Fix variable W to m
+   }
+
+   public static void main(String[] args) {
+      int[] profit = {1, 2, 5, 6};
+      int[] weight = {2, 3, 4, 5};
+      int maxCapacity = 8;
+      int len = profit.length;
+
+      System.out.println("Maximum Profit achieved with this knapsack: " + knapsack(maxCapacity, weight, profit, len));
+   }
+}
+
+//output
+Maximum Profit achieved with this knapsack: 8
